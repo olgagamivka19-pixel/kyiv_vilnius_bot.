@@ -78,13 +78,13 @@ async def language(callback: types.CallbackQuery):
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
                 [
-                    InlineKeyboardButton(text="⭐️ 1", callback_data="rating_1"),
-                    InlineKeyboardButton(text="⭐️ 2", callback_data="rating_2"),
-                    InlineKeyboardButton(text="⭐️ 3", callback_data="rating_3")
+                    InlineKeyboardButton(text="⭐ 1", callback_data="rating_1"),
+                    InlineKeyboardButton(text="⭐ 2", callback_data="rating_2"),
+                    InlineKeyboardButton(text="⭐ 3", callback_data="rating_3")
                 ],
                 [
-                    InlineKeyboardButton(text="⭐️ 4", callback_data="rating_4"),
-                    InlineKeyboardButton(text="⭐️ 5", callback_data="rating_5")
+                    InlineKeyboardButton(text="⭐ 4", callback_data="rating_4"),
+                    InlineKeyboardButton(text="⭐ 5", callback_data="rating_5")
                 ]
             ]
         )
@@ -95,18 +95,17 @@ async def language(callback: types.CallbackQuery):
             reply_markup=keyboard
         )
 
-   await callback.answer()
+    await callback.answer()
+
 
 @dp.message()
-
 async def get_chat_id(message: types.Message):
-
     await message.answer(f"ID цього чату: {message.chat.id}")
 
-async def main():
 
+async def main():
     await dp.start_polling(bot)
 
-if name == "__main__":
 
+if name == "__main__":
     asyncio.run(main())

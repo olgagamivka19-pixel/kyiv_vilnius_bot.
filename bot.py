@@ -8,7 +8,7 @@ import os
 TOKEN = os.getenv("BOT_TOKEN")
 
 # ID групи адміністраторів
-ADMIN_CHAT_ID = 5179615999
+ADMIN_CHAT_ID = -5179615999
 
 
 bot = Bot(token=TOKEN)

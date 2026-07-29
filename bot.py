@@ -101,15 +101,13 @@ def ratings():
 async def start(message: types.Message):
 
     if not can_review(message.from_user.id):
-
         await message.answer(
             "Ви вже залишали відгук 🤍\n\n"
             "Дякуємо, що обираєте Kyiv!"
         )
         return
 
-
-  await message.answer(
+    await message.answer(
         "👋 Вітаємо у ресторані Kyiv!\n\n"
         "Оберіть мову:",
         reply_markup=languages()

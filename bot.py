@@ -5,8 +5,8 @@ from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 import asyncio
-
-TOKEN = "8977422776:AAGlY1Bsrm8uS5YUBOKP8LU06MKVf9wz0rk"
+import OS
+TOKEN = os.getenv"8977422776:AAGlY1Bsrm8uS5YUBOKP8LU06MKVf9wz0rk"
 
 bot = Bot(token=TOKEN)
 

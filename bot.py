@@ -73,31 +73,30 @@ async def language(callback: types.CallbackQuery):
 
     elif callback.data.startswith("rating_"):
 
-        rating = callback.data.split("_")[1]
+    rating = callback.data.split("_")[1]
 
-        if rating in ["1", "2", "3"]:
+    if rating in ["1", "2", "3"]:
 
-            await bot.send_message(
-               ADMIN_CHAT_ID,
-                f"⚠️ Новий відгук Kyiv\n\n"
-                f"Оцінка клієнта: ⭐️{rating}"
-            )
+        await bot.send_message(
+            ADMIN_CHAT_ID,
+            f"⚠️ Новий відгук Kyiv\n\n"
+            f"Оцінка клієнта: ⭐️{rating}"
+        )
 
-           await callback.message.answer(
-    "Дякуємо за ваш відгук! 🙂\n\n"
-    "Усі повідомлення автоматично передаються керівництву ресторану "
-    "та уважно розглядаються."
-)
+        await callback.message.answer(
+            "Дякуємо за ваш відгук! 🙂\n\n"
+            "Усі повідомлення автоматично передаються керівництву ресторану "
+            "та уважно розглядаються."
+        )
 
-        else:
+    else:
 
-            await callback.message.answer(
-                "Дякуємо за високу оцінку 🤍\n\n"
-                "Будемо вдячні за ваш відгук у Google ⭐️"
-            )
+        await callback.message.answer(
+            "Дякуємо за високу оцінку 🤍\n\n"
+            "Будемо вдячні за ваш відгук у Google ⭐️"
+        )
 
-
-    await callback.answer()
+await callback.answer()
 
 
 # Тимчасово для отримання ID групи
@@ -110,5 +109,5 @@ async def main():
     await dp.start_polling(bot)
 
 
-if __name__== "__main__":
+if name == "__main__":
     asyncio.run(main())

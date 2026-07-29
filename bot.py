@@ -7,7 +7,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import asyncio
 import os
 TOKEN = os.getenv("BOT_TOKEN")
-ADMIN_CHAT_ID = 5179615999
+ADMIN_CHAT_ID
 bot = Bot(token=TOKEN)
 
 dp = Dispatcher()

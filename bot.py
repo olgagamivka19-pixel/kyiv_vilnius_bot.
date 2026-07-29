@@ -111,6 +111,8 @@ async def callback_handler(callback: types.CallbackQuery):
 
         else:
 
+    print("ВИСОКА ОЦІНКА")
+
     google_keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [

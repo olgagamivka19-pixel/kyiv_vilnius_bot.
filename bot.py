@@ -78,7 +78,7 @@ async def language(callback: types.CallbackQuery):
         if rating in ["1", "2", "3"]:
 
             await bot.send_message(
-                CHAT_ID,
+               ADMIN_CHAT_ID,
                 f"⚠️ Новий відгук Kyiv\n\n"
                 f"Оцінка клієнта: ⭐️{rating}"
             )

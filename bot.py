@@ -7,7 +7,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import asyncio
 import os
 TOKEN = os.getenv("BOT_TOKEN")
-
+ADMIN_CHAT_ID = 5179615999
 bot = Bot(token=TOKEN)
 
 dp = Dispatcher()
@@ -98,9 +98,32 @@ async def language(callback: types.CallbackQuery):
     await callback.answer()
 
 
-@dp.message()
-async def get_chat_id(message: types.Message):
-    await message.answer(f"ID цього чату: {message.chat.id}")
+@dp.callback_query()
+async def ratings(callback: types.CallbackQuery):
+
+    if callback.data.startswith("rating_"):
+
+        rating = callback.data.split("_")[1]
+
+        if rating in ["1", "2", "3"]:
+            await bot.send_message(
+                5179615999,
+                f"⚠️ Новий відгук Kyiv\n\nОцінка клієнта: ⭐{rating}"
+            )
+
+            await callback.message.answer(
+                "Дякуємо за ваш відгук.\n"
+                "Нам шкода, що ваш візит не виправдав очікувань.\n\n"
+                "Напишіть, будь ласка, що ми можемо покращити."
+            )
+
+        else:
+            await callback.message.answer(
+                "Дякуємо за високу оцінку 🤍\n\n"
+                "Будемо вдячні за ваш відгук у Google ⭐"
+            )
+
+    await callback.answer()
 
 
 async def main():

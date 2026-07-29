@@ -13,62 +13,37 @@ bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
 @dp.message(Command("start"))
-
 async def start(message: types.Message):
 
     keyboard = InlineKeyboardMarkup(
-
         inline_keyboard=[
-
             [
-
                 InlineKeyboardButton(
-
                     text="🇺🇦 Українська",
-
                     callback_data="uk"
-
                 )
-
             ],
-
             [
-
                 InlineKeyboardButton(
-
                     text="🇬🇧 English",
-
                     callback_data="en"
-
                 )
-
             ],
-
             [
-
                 InlineKeyboardButton(
-
                     text="🇱🇹 Lietuvių",
-
                     callback_data="lt"
-
                 )
-
             ]
-
         ]
-
     )
 
     await message.answer(
-
         "👋 Вітаємо у ресторані Kyiv! 🇺🇦\n\n"
-
         "Оберіть мову:",
-
         reply_markup=keyboard
-
     )
+
 
 @dp.callback_query()
 async def language(callback: types.CallbackQuery):
@@ -103,8 +78,9 @@ async def language(callback: types.CallbackQuery):
         if rating in ["1", "2", "3"]:
 
             await bot.send_message(
-                5179615999,
-                f"⚠️ Новий відгук Kyiv\n\nОцінка клієнта: ⭐️{rating}"
+                CHAT_ID,
+                f"⚠️ Новий відгук Kyiv\n\n"
+                f"Оцінка клієнта: ⭐️{rating}"
             )
 
             await callback.message.answer(
@@ -122,37 +98,17 @@ async def language(callback: types.CallbackQuery):
 
 
     await callback.answer()
-@dp.callback_query()
-async def ratings(callback: types.CallbackQuery):
 
-    if callback.data.startswith("rating_"):
 
-        rating = callback.data.split("_")[1]
-
-        if rating in ["1", "2", "3"]:
-            await bot.send_message(
-                5179615999,
-                f"⚠️ Новий відгук Kyiv\n\nОцінка клієнта: ⭐{rating}"
-            )
-
-            await callback.message.answer(
-                "Дякуємо за ваш відгук.\n"
-                "Нам шкода, що ваш візит не виправдав очікувань.\n\n"
-                "Напишіть, будь ласка, що ми можемо покращити."
-            )
-
-        else:
-            await callback.message.answer(
-                "Дякуємо за високу оцінку 🤍\n\n"
-                "Будемо вдячні за ваш відгук у Google ⭐"
-            )
-
-    await callback.answer()
+# Тимчасово для отримання ID групи
+@dp.message()
+async def get_chat_id(message: types.Message):
+    await message.answer(f"ID чату: {message.chat.id}")
 
 
 async def main():
     await dp.start_polling(bot)
 
 
-if __name__ == "__main__":
+if name == "__main__":
     asyncio.run(main())

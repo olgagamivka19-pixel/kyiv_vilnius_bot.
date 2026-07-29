@@ -109,12 +109,14 @@ async def start(message: types.Message):
         return
 
 
-    await message.answer(
+  await message.answer(
         "👋 Вітаємо у ресторані Kyiv!\n\n"
         "Оберіть мову:",
         reply_markup=languages()
     )
-    @dp.callback_query()
+
+
+@dp.callback_query()
 async def callback_handler(callback: types.CallbackQuery):
 
     user_id = callback.from_user.id

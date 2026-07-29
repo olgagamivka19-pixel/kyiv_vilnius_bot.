@@ -16,13 +16,27 @@ bot = Bot(token=TOKEN)
 
 dp = Dispatcher()
 
-# зберігаємо мову і очікування відгуку
-
 user_language = {}
 
-waiting_feedback = {}
+waiting_feedback = set()
 
-def ratings_keyboard():
+def lang_buttons():
+
+    return InlineKeyboardMarkup(
+
+        inline_keyboard=[
+
+            [InlineKeyboardButton(text="🇺🇦 Українська", callback_data="uk")],
+
+            [InlineKeyboardButton(text="🇬🇧 English", callback_data="en")],
+
+            [InlineKeyboardButton(text="🇱🇹 Lietuvių", callback_data="lt")]
+
+        ]
+
+    )
+
+def rating_buttons():
 
     return InlineKeyboardMarkup(
 
@@ -54,57 +68,11 @@ def ratings_keyboard():
 
 async def start(message: types.Message):
 
-    keyboard = InlineKeyboardMarkup(
-
-        inline_keyboard=[
-
-            [
-
-                InlineKeyboardButton(
-
-                    text="🇺🇦 Українська",
-
-                    callback_data="uk"
-
-                )
-
-            ],
-
-            [
-
-                InlineKeyboardButton(
-
-                    text="🇬🇧 English",
-
-                    callback_data="en"
-
-                )
-
-            ],
-
-            [
-
-                InlineKeyboardButton(
-
-                    text="🇱🇹 Lietuvių",
-
-                    callback_data="lt"
-
-                )
-
-            ]
-
-        ]
-
-    )
-
     await message.answer(
 
-        "👋 Вітаємо у ресторані Kyiv!\n\n"
+        "👋 Вітаємо у ресторані Kyiv!\n\nОберіть мову:",
 
-        "Оберіть мову:",
-
-        reply_markup=keyboard
+        reply_markup=lang_buttons()
 
     )
 
@@ -114,51 +82,27 @@ async def callback_handler(callback: types.CallbackQuery):
 
     user_id = callback.from_user.id
 
-    # Вибір мови
-
     if callback.data in ["uk", "en", "lt"]:
 
         user_language[user_id] = callback.data
 
-        if callback.data == "uk":
+        text = {
 
-            text = (
+            "uk": "Чи сподобався вам ваш візит?\n\nОберіть оцінку ⭐️",
 
-                "Чи сподобався вам ваш візит?\n\n"
+            "en": "Did you enjoy your visit?\n\nChoose your rating ⭐️",
 
-                "Оберіть оцінку ⭐️"
+            "lt": "Ar jums patiko jūsų apsilankymas?\n\nPasirinkite įvertinimą ⭐️"
 
-            )
-
-        elif callback.data == "en":
-
-            text = (
-
-                "Did you enjoy your visit?\n\n"
-
-                "Choose your rating ⭐️"
-
-            )
-
-        else:
-
-            text = (
-
-                "Ar jums patiko jūsų apsilankymas?\n\n"
-
-                "Pasirinkite įvertinimą ⭐️"
-
-            )
+        }
 
         await callback.message.answer(
 
-            text,
+            text[callback.data],
 
-            reply_markup=ratings_keyboard()
+            reply_markup=rating_buttons()
 
         )
-
-    # Оцінка
 
     elif callback.data.startswith("rating_"):
 
@@ -168,84 +112,42 @@ async def callback_handler(callback: types.CallbackQuery):
 
         if rating in ["1", "2", "3"]:
 
-            waiting_feedback[user_id] = True
+            waiting_feedback.add(user_id)
 
-            if lang == "uk":
+            text = {
 
-                text = (
+                "uk": "Нам шкода, що ваш візит не виправдав очікувань 😔\n\nОпишіть, будь ласка, ситуацію. Можете також додати фото 📸",
 
-                    "Нам шкода, що ваш візит не виправдав очікувань 😔\n\n"
+                "en": "We are sorry your visit did not meet expectations 😔\n\nPlease describe the situation. You can also add a photo 📸",
 
-                    "Будь ласка, опишіть ситуацію.\n"
+                "lt": "Apgailestaujame, kad jūsų apsilankymas neatitiko lūkesčių 😔\n\nPrašome aprašyti situaciją. Galite pridėti nuotrauką 📸"
 
-                    "Ви також можете додати фото 📸"
+            }
 
-                )
-
-            elif lang == "en":
-
-                text = (
-
-                    "We are sorry that your visit did not meet expectations 😔\n\n"
-
-                    "Please describe the situation.\n"
-
-                    "You can also attach a photo 📸"
-
-                )
-
+            await callback.message.answer(text[lang])
             else:
 
-                text = (
+            text = {
 
-                    "Apgailestaujame, kad jūsų apsilankymas neatitiko lūkesčių 😔\n\n"
+                "uk": "Дякуємо за високу оцінку 🤍\n\nБудемо вдячні за відгук у Google ⭐️",
 
-                    "Prašome aprašyti situaciją.\n"
+                "en": "Thank you for your high rating 🤍\n\nWe would appreciate your Google review ⭐️",
 
-                    "Taip pat galite pridėti nuotrauką 📸"
+                "lt": "Dėkojame už aukštą įvertinimą 🤍\n\nBūtume dėkingi už atsiliepimą Google ⭐️"
 
-                )
+            }
 
-            await callback.message.answer(text)
+            button = {
 
-        else:
+                "uk": "⭐️ Залишити відгук Google",
 
-            if lang == "uk":
+                "en": "⭐️ Leave Google review",
 
-                text = (
+                "lt": "⭐️ Palikti atsiliepimą Google"
 
-                    "Дякуємо за високу оцінку 🤍\n\n"
+            }
 
-                    "Будемо вдячні за ваш відгук у Google ⭐️"
-
-                )
-
-                button = "⭐️ Залишити відгук Google"
-
-            elif lang == "en":
-
-                text = (
-
-                    "Thank you for your high rating 🤍\n\n"
-
-                    "We would appreciate your Google review ⭐️"
-
-                )
-                button = "⭐️ Leave Google review"
-
-            else:
-
-                text = (
-
-                    "Dėkojame už aukštą įvertinimą 🤍\n\n"
-
-                    "Būtume dėkingi už jūsų atsiliepimą Google ⭐️"
-
-                )
-
-                button = "⭐️ Palikti atsiliepimą Google"
-
-            google_button = InlineKeyboardMarkup(
+            google = InlineKeyboardMarkup(
 
                 inline_keyboard=[
 
@@ -253,7 +155,7 @@ async def callback_handler(callback: types.CallbackQuery):
 
                         InlineKeyboardButton(
 
-                            text=button,
+                            text=button[lang],
 
                             url="https://search.google.com/local/writereview?placeid=ChIJh2pRZtOV3UYR9-p0eIiDA2o"
 
@@ -267,15 +169,13 @@ async def callback_handler(callback: types.CallbackQuery):
 
             await callback.message.answer(
 
-                text,
+                text[lang],
 
-                reply_markup=google_button
+                reply_markup=google
 
             )
 
     await callback.answer()
-
-# Отримання тексту або фото від клієнта
 
 @dp.message()
 
@@ -283,45 +183,43 @@ async def receive_feedback(message: types.Message):
 
     user_id = message.from_user.id
 
-    if waiting_feedback.get(user_id):
+    if user_id in waiting_feedback:
 
-        waiting_feedback[user_id] = False
+        waiting_feedback.remove(user_id)
 
-        caption = (
+        info = (
 
             "⚠️ Новий негативний відгук Kyiv\n\n"
 
             f"Клієнт: {message.from_user.full_name}\n"
 
-            f"ID: {user_id}\n\n"
-
         )
 
-        if message.text:
-
-            await bot.send_message(
-
-                ADMIN_CHAT_ID,
-
-                caption + message.text
-
-            )
-
-        elif message.photo:
+        if message.photo:
 
             await bot.send_photo(
 
                 ADMIN_CHAT_ID,
 
-                photo=message.photo[-1].file_id,
+                message.photo[-1].file_id,
 
-                caption=caption + "Фото від клієнта 📸"
+                caption=info + "\n" + (message.caption or "")
+
+            )
+
+        elif message.text:
+
+            await bot.send_message(
+
+                ADMIN_CHAT_ID,
+
+                info + "\n" + message.text
 
             )
 
         await message.answer(
 
-            "Дякуємо за ваш відгук.\n"
+            "Дякуємо за ваш відгук 🙂\n"
 
             "Інформацію передано керівництву ресторану."
 

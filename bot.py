@@ -11,7 +11,7 @@ ADMIN_CHAT_ID = 5179615999
 bot = Bot(token=TOKEN)
 
 dp = Dispatcher()
-
+CHAT_ID = 0
 @dp.message(Command("start"))
 async def start(message: types.Message):
 

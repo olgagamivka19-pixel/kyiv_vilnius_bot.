@@ -95,11 +95,18 @@ async def language(callback: types.CallbackQuery):
             reply_markup=keyboard
         )
 
-    await callback.answer()
+   await callback.answer()
+
+@dp.message()
+
+async def get_chat_id(message: types.Message):
+
+    await message.answer(f"ID цього чату: {message.chat.id}")
+
 async def main():
 
     await dp.start_polling(bot)
 
-if __name__== "__main__":
+if name == "__main__":
 
     asyncio.run(main())

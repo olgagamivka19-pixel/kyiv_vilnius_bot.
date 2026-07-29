@@ -78,13 +78,13 @@ async def language(callback: types.CallbackQuery):
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
                 [
-                    InlineKeyboardButton(text="⭐ 1", callback_data="rating_1"),
-                    InlineKeyboardButton(text="⭐ 2", callback_data="rating_2"),
-                    InlineKeyboardButton(text="⭐ 3", callback_data="rating_3")
+                    InlineKeyboardButton(text="⭐️ 1", callback_data="rating_1"),
+                    InlineKeyboardButton(text="⭐️ 2", callback_data="rating_2"),
+                    InlineKeyboardButton(text="⭐️ 3", callback_data="rating_3")
                 ],
                 [
-                    InlineKeyboardButton(text="⭐ 4", callback_data="rating_4"),
-                    InlineKeyboardButton(text="⭐ 5", callback_data="rating_5")
+                    InlineKeyboardButton(text="⭐️ 4", callback_data="rating_4"),
+                    InlineKeyboardButton(text="⭐️ 5", callback_data="rating_5")
                 ]
             ]
         )
@@ -95,9 +95,33 @@ async def language(callback: types.CallbackQuery):
             reply_markup=keyboard
         )
 
+
+    elif callback.data.startswith("rating_"):
+
+        rating = callback.data.split("_")[1]
+
+        if rating in ["1", "2", "3"]:
+
+            await bot.send_message(
+                5179615999,
+                f"⚠️ Новий відгук Kyiv\n\nОцінка клієнта: ⭐️{rating}"
+            )
+
+            await callback.message.answer(
+                "Дякуємо за ваш відгук.\n"
+                "Нам шкода, що ваш візит не виправдав очікувань.\n\n"
+                "Напишіть, будь ласка, що ми можемо покращити."
+            )
+
+        else:
+
+            await callback.message.answer(
+                "Дякуємо за високу оцінку 🤍\n\n"
+                "Будемо вдячні за ваш відгук у Google ⭐️"
+            )
+
+
     await callback.answer()
-
-
 @dp.callback_query()
 async def ratings(callback: types.CallbackQuery):
 

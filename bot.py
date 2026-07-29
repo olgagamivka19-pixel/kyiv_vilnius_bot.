@@ -111,11 +111,22 @@ async def callback_handler(callback: types.CallbackQuery):
 
         else:
 
-            await callback.message.answer(
-                "Дякуємо за високу оцінку 🤍\n\n"
-                "Будемо вдячні за ваш відгук у Google ⭐️"
-            )
+    google_keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="⭐️ Залишити відгук у Google",
+                    url="https://search.google.com/local/writereview?placeid=ChIJh2pRZtOV3UYR9-p0eIiDA2o"
+                )
+            ]
+        ]
+    )
 
+    await callback.message.answer(
+        "Дякуємо за високу оцінку 🤍\n\n"
+        "Будемо вдячні за ваш відгук у Google ⭐️",
+        reply_markup=google_keyboard
+    )
 
     await callback.answer()
 

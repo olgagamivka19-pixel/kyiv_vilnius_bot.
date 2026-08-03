@@ -141,25 +141,37 @@ async def callback_handler(callback: types.CallbackQuery):
 
     # Вибір оцінки
 
-    elif callback.data.startswith("rating_"):
+   elif callback.data.startswith("rating_"):
 
-        if not can_review(user_id):
+    lang = user_language.get(user_id, "uk")
 
-            await callback.message.answer(
+    if not can_review(user_id):
+
+        already_review_text = {
+            "uk": 
                 "Ви вже залишали відгук 🤍\n"
-                "Дякуємо!"
-            )
+                "Дякуємо!",
 
-            await callback.answer()
-            return
+            "en":
+                "You have already left a review 🤍\n"
+                "Thank you!",
+
+            "lt":
+                "Jūs jau palikote atsiliepimą 🤍\n"
+                "Ačiū!"
+        }
+
+        await callback.message.answer(
+            already_review_text[lang]
+        )
+
+        await callback.answer()
+        return
 
 
-        rating = callback.data.split("_")[1]
+    rating = callback.data.split("_")[1]
 
-        chosen_rating[user_id] = rating
-
-
-        lang = user_language.get(user_id, "uk")
+    chosen_rating[user_id] = rating
 
 
         # Поганий відгук

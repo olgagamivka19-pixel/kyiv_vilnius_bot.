@@ -141,6 +141,30 @@ async def callback_handler(callback: types.CallbackQuery):
 
     # Вибір оцінки
 
+    user_id = callback.from_user.id
+
+
+    # Вибір мови
+
+    if callback.data in ["uk", "en", "lt"]:
+
+        user_language[user_id] = callback.data
+
+        texts = {
+            "uk": "Чи сподобався вам ваш візит?\n\nОберіть оцінку ⭐️",
+            "en": "Did you enjoy your visit?\n\nChoose your rating ⭐️",
+            "lt": "Ar jums patiko jūsų apsilankymas?\n\nPasirinkite įvertinimą ⭐️"
+        }
+
+
+        await callback.message.answer(
+            texts[callback.data],
+            reply_markup=ratings()
+        )
+
+
+    # Вибір оцінки
+
    elif callback.data.startswith("rating_"):
 
     lang = user_language.get(user_id, "uk")
@@ -177,6 +201,7 @@ async def callback_handler(callback: types.CallbackQuery):
         # Поганий відгук
 
         if rating in ["1", "2", "3"]:
+
 
             waiting_feedback.add(user_id)
 

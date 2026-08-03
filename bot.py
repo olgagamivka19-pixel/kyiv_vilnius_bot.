@@ -119,9 +119,7 @@ async def callback_handler(callback: types.CallbackQuery):
 
     user_id = callback.from_user.id
 
-
     # Вибір мови
-
     if callback.data in ["uk", "en", "lt"]:
 
         user_language[user_id] = callback.data
@@ -132,7 +130,6 @@ async def callback_handler(callback: types.CallbackQuery):
             "lt": "Ar jums patiko jūsų apsilankymas?\n\nPasirinkite įvertinimą ⭐️"
         }
 
-
         await callback.message.answer(
             texts[callback.data],
             reply_markup=ratings()
@@ -140,62 +137,62 @@ async def callback_handler(callback: types.CallbackQuery):
 
 
     # Вибір оцінки
-
-    user_id = callback.from_user.id
-
-
-    # Вибір мови
-
-    if callback.data in ["uk", "en", "lt"]:
-
-        user_language[user_id] = callback.data
-
-        texts = {
-            "uk": "Чи сподобався вам ваш візит?\n\nОберіть оцінку ⭐️",
-            "en": "Did you enjoy your visit?\n\nChoose your rating ⭐️",
-            "lt": "Ar jums patiko jūsų apsilankymas?\n\nPasirinkite įvertinimą ⭐️"
-        }
-
-
-        await callback.message.answer(
-            texts[callback.data],
-            reply_markup=ratings()
-        )
-
-
     # Вибір оцінки
 
-   elif callback.data.startswith("rating_"):
+    elif callback.data.startswith("rating_"):
 
-    lang = user_language.get(user_id, "uk")
+        lang = user_language.get(user_id, "uk")
 
-    if not can_review(user_id):
+        if not can_review(user_id):
 
-        already_review_text = {
-            "uk": 
-                "Ви вже залишали відгук 🤍\n"
-                "Дякуємо!",
+            already_review_text = {
+                "uk": "Ви вже залишали відгук 🤍\nДякуємо!",
+                "en": "You have already left a review 🤍\nThank you!",
+                "lt": "Jūs jau palikote atsiliepimą 🤍\nAčiū!"
+            }
 
-            "en":
-                "You have already left a review 🤍\n"
-                "Thank you!",
+            await callback.message.answer(
+                already_review_text[lang]
+            )
 
-            "lt":
-                "Jūs jau palikote atsiliepimą 🤍\n"
-                "Ačiū!"
-        }
+            await callback.answer()
+            return
 
-        await callback.message.answer(
-            already_review_text[lang]
-        )
+
+        rating = callback.data.split("_")[1]
+
+        chosen_rating[user_id] = rating
+
+
+        # Поганий відгук
+
+        if rating in ["1", "2", "3"]:
+
+            bad_review_text = {
+                "uk": "Нам шкода, що ваш досвід був неідеальним 😔\nНапишіть, будь ласка, що ми можемо покращити.",
+                "en": "We are sorry your experience was not perfect 😔\nPlease tell us what we can improve.",
+                "lt": "Apgailestaujame, kad jūsų patirtis nebuvo tobula 😔\nPrašome parašyti, ką galime pagerinti."
+            }
+
+            await callback.message.answer(
+                bad_review_text[lang]
+            )
+
+            waiting_feedback.add(user_id)
+
+        else:
+
+            good_review_text = {
+                "uk": "Дякуємо за високу оцінку 🤍\nБудемо вдячні за ваш відгук у Google ⭐️",
+                "en": "Thank you for your high rating 🤍\nWe would appreciate your Google review ⭐️",
+                "lt": "Dėkojame už aukštą įvertinimą 🤍\nBūtume dėkingi už jūsų atsiliepimą Google ⭐️"
+            }
+
+            await callback.message.answer(
+                good_review_text[lang]
+            )
 
         await callback.answer()
-        return
-
-
-    rating = callback.data.split("_")[1]
-
-    chosen_rating[user_id] = rating
 
 
         # Поганий відгук
